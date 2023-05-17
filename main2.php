@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 date_default_timezone_set('Asia/Jakarta');
 
 session_start();
@@ -183,7 +184,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <tr>
             <td id='client_list'>
                 <?php
-                $conn = new mysqli('localhost', 'root', '', 'magang-database');
+                $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
                 if ($conn->connect_error) {
                     die("Connection failed: " . $conn->connect_error);
                 }

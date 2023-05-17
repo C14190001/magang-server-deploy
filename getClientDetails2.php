@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 session_start();
 if (!isset($_SESSION["user"])) {
     echo "<script>window.location.href='login.php';</script>";
@@ -6,7 +7,7 @@ if (!isset($_SESSION["user"])) {
     $clientId = $_POST["clientId"];
     $FilterFrom = $_POST["from"];
     $FilterTo = $_POST["to"];
-    $conn = new mysqli('localhost', 'root', '', 'magang-database');
+    $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
@@ -41,7 +42,7 @@ if (!isset($_SESSION["user"])) {
             // echo "<button type='button' onclick='refreshClient(" . $row["id"] . ")'>Refresh</button>";
 
             echo "<p> Total Uptime: <br>• ";
-            $conn2 = new mysqli('localhost', 'root', '', 'magang-database');
+            $conn2 = new mysqli($ServerIP, $Username, $Password, $DbName);
             if ($conn2->connect_error) {
                 die("Connection failed: " . $conn2->connect_error);
             }

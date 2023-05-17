@@ -1,11 +1,12 @@
 <?php
+include 'config.php';
 session_start();
 if (!isset($_SESSION["user"])) {
     echo "<script>window.location.href='login.php';</script>";
 } else {
     $FilterFrom = $_POST["From"];
     $FilterTo = $_POST["To"];
-    $conn = new mysqli('localhost', 'root', '', 'magang-database');
+    $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }

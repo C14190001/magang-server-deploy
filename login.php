@@ -1,4 +1,5 @@
 <?php
+include 'config.php';
 session_start();
 if (isset($_SESSION["user"])) {
   echo "<script>window.location.href='main2.php';</script>";
@@ -9,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $user = $_POST['user'];
   $pass = $_POST['pass'];
 
-  $conn = new mysqli('localhost', 'root', '', 'magang-database');
+  $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
   if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
   }

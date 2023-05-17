@@ -1,10 +1,11 @@
 <?php
+include 'config.php';
 session_start();
 if (!isset($_SESSION["user"])) {
     echo "<script>window.location.href='login.php';</script>";
 } else {
     $cId = $_POST["Id"];
-    $conn = new mysqli('localhost', 'root', '', 'magang-database');
+    $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
@@ -38,7 +39,7 @@ if (!isset($_SESSION["user"])) {
 
             echo "<p> Uptime: <br>• ";
             //Get last Status
-            $conn2 = new mysqli('localhost', 'root', '', 'magang-database');
+            $conn2 = new mysqli($ServerIP, $Username, $Password, $DbName);
             if ($conn2->connect_error) {
                 die("Connection failed: " . $conn2->connect_error);
             }
@@ -54,7 +55,7 @@ if (!isset($_SESSION["user"])) {
                         $last_on = new DateTime($row2["dt"]);
 
                         //Get current time
-                        $conn3 = new mysqli('localhost', 'root', '', 'magang-database');
+                        $conn3 = new mysqli($ServerIP, $Username, $Password, $DbName);
                         if ($conn3->connect_error) {
                             die("Connection failed: " . $conn->connect_error);
                         }
@@ -76,7 +77,7 @@ if (!isset($_SESSION["user"])) {
                         $last_off = new DateTime($row2["dt"]);
 
                         //Get last ON
-                        $conn3 = new mysqli('localhost', 'root', '', 'magang-database');
+                        $conn3 = new mysqli($ServerIP, $Username, $Password, $DbName);
                         if ($conn3->connect_error) {
                             die("Connection failed: " . $conn->connect_error);
                         }
