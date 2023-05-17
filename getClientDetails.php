@@ -2,7 +2,7 @@
 include 'config.php';
 session_start();
 if (!isset($_SESSION["user"])) {
-    echo "<script>window.location.href='login.php';</script>";
+    
 } else {
     $clientId = $_POST["clientId"];
     $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
