@@ -98,20 +98,24 @@ ALTER TABLE `admins`
 --
 -- Indexes for table `clients`
 --
-ALTER TABLE `clients`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `clients` ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `client_apps`
 --
-ALTER TABLE `client_apps`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `client_apps` ADD PRIMARY KEY (`id`);
+ALTER TABLE `client_apps` ADD FOREIGN KEY (`id`) REFERENCES `clients`(`id`);
 
 --
 -- Indexes for table `client_specs`
 --
-ALTER TABLE `client_specs`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `client_specs` ADD PRIMARY KEY (`id`);
+ALTER TABLE `client_specs` ADD FOREIGN KEY (`id`) REFERENCES `clients`(`id`);
+
+--
+-- Indexes for table `client_status`
+--
+ALTER TABLE `client_status` ADD FOREIGN KEY (`id`) REFERENCES `clients`(`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
