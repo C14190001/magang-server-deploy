@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 17, 2023 at 06:41 AM
+-- Generation Time: May 18, 2023 at 07:29 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -98,28 +98,65 @@ ALTER TABLE `admins`
 --
 -- Indexes for table `clients`
 --
-ALTER TABLE `clients` ADD PRIMARY KEY (`id`);
+ALTER TABLE `clients`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `client_apps`
 --
-ALTER TABLE `client_apps` ADD PRIMARY KEY (`id`);
-ALTER TABLE `client_apps` ADD FOREIGN KEY (`id`) REFERENCES `clients`(`id`);
+ALTER TABLE `client_apps`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `client_specs`
 --
-ALTER TABLE `client_specs` ADD PRIMARY KEY (`id`);
-ALTER TABLE `client_specs` ADD FOREIGN KEY (`id`) REFERENCES `clients`(`id`);
+ALTER TABLE `client_specs`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `client_status`
 --
-ALTER TABLE `client_status` ADD FOREIGN KEY (`id`) REFERENCES `clients`(`id`);
+ALTER TABLE `client_status`
+  ADD KEY `id` (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `admin_id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `clients`
+--
+ALTER TABLE `clients`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `client_apps`
+--
+ALTER TABLE `client_apps`
+  ADD CONSTRAINT `client_apps_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clients` (`id`);
+
+--
+-- Constraints for table `client_specs`
+--
+ALTER TABLE `client_specs`
+  ADD CONSTRAINT `client_specs_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clients` (`id`);
+
+--
+-- Constraints for table `client_status`
+--
+ALTER TABLE `client_status`
+  ADD CONSTRAINT `client_status_ibfk_1` FOREIGN KEY (`id`) REFERENCES `clients` (`id`);
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
