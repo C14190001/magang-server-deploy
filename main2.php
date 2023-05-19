@@ -2,6 +2,18 @@
 include 'config.php';
 date_default_timezone_set('Asia/Jakarta');
 
+$dsn = "mysql:host=$ServerIP;dbname=$DbName;charset=$DBCharset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+try {
+    $pdo = new PDO($dsn, $Username, $Password, $options);
+} catch (\PDOException $e) {
+    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+
 session_start();
 if (!isset($_SESSION["user"])) {
     echo "<script>window.location.href='login.php';</script>";
@@ -37,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </style>
 <script src="jquery.min.js"></script>
 <script>
+    //PDO
     function updateClient(clientId) {
         $.ajax({
             type: "POST",
@@ -49,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     }
 
+    //PDO
     function refreshClient(clientId) {
         document.getElementById(clientId).innerHTML = "<p>Loading...</p>";
         $.ajax({
@@ -62,6 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     }
 
+    //PDO
     function getClientApps(clientButtonId) {
         $btnId = "client-apps-";
         $btnId += clientButtonId;
@@ -77,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     }
 
+    //PDO
     function showClientDetails(clientId) {
         document.getElementById("client_details").innerHTML = "Loading...";
         $.ajax({
@@ -105,6 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         });
     }
 
+    //PDO
     function clientFilterByTime() {
         let FilterFrom = document.getElementById("filterbyTime_From").value;
         let FilterTo = document.getElementById("filterbyTime_To").value;
@@ -184,42 +201,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <tr>
             <td id='client_list'>
                 <?php
-                $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
-
-                $sql = "SELECT `clients`.`id` AS 'id', 
-                `client_specs`.`name` AS 'name',
-                `client_specs`.`ip` AS 'ip'
-                FROM clients
-                INNER JOIN `client_specs` ON `client_specs`.`id` = `clients`.`id`";
-                $result = $conn->query($sql);
-
-                if ($result->num_rows > 0) {
-                    while ($row = $result->fetch_assoc()) {
-                        $subs_ip = "";
-                        $str = $row["ip"];
-                        $b = 0;
-                        for ($i = 0; $i < strlen($str) && $i < 25; $i++) {
-                            if ($str[$i] == '/') {
-                                $subs_ip = $subs_ip . substr($str, $b, ($i - $b));
-                                if ($i < strlen($str) - 1) {
-                                    $subs_ip = $subs_ip . ", ";
-                                }
-                                $b = $i + 1;
+                $stmt = $pdo->prepare("SELECT `clients`.`id` AS 'id', 
+                 `client_specs`.`name` AS 'name',
+                 `client_specs`.`ip` AS 'ip'
+                 FROM clients
+                 INNER JOIN `client_specs` ON `client_specs`.`id` = `clients`.`id`");
+                $stmt->execute();
+                foreach ($stmt as $row) {
+                    $subs_ip = "";
+                    $str = $row["ip"];
+                    $b = 0;
+                    for ($i = 0; $i < strlen($str) && $i < 25; $i++) {
+                        if ($str[$i] == '/') {
+                            $subs_ip = $subs_ip . substr($str, $b, ($i - $b));
+                            if ($i < strlen($str) - 1) {
+                                $subs_ip = $subs_ip . ", ";
                             }
-                            if ($i >= 24) {
-                                $subs_ip = $subs_ip . "...";
-                            }
+                            $b = $i + 1;
                         }
-                        echo '<input type="button" onclick=showClientDetails("' . $row['id'] . '");
+                        if ($i >= 24) {
+                            $subs_ip = $subs_ip . "...";
+                        }
+                    }
+                    echo '<input type="button" onclick=showClientDetails("' . $row['id'] . '");
                         style="width:100%; text-align: left;"
                         value="[' . $row['id'] . '] ' . $row['name'] . ' (' . $subs_ip . ')"></input>';
-                        echo '<br><br>';
-                    }
+                    echo '<br><br>';
                 }
-                $conn->close();
                 ?>
             </td>
             <td id='client_details'>

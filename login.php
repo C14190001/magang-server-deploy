@@ -6,25 +6,33 @@ if (isset($_SESSION["user"])) {
   exit;
 }
 
+$dsn = "mysql:host=$ServerIP;dbname=$DbName;charset=$DBCharset";
+$options = [
+  PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+  PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+  PDO::ATTR_EMULATE_PREPARES   => false,
+];
+try {
+  $pdo = new PDO($dsn, $Username, $Password, $options);
+} catch (\PDOException $e) {
+  throw new \PDOException($e->getMessage(), (int)$e->getCode());
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $user = $_POST['user'];
   $pass = $_POST['pass'];
-
-  $conn = new mysqli($ServerIP, $Username, $Password, $DbName);
-  if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-  }
   $passmd5 = md5($pass);
-  $sql = "SELECT username as name FROM admins WHERE username = '$user' AND password = '$passmd5'";
-  $result = $conn->query($sql);
-  $hasil = $result->fetch_assoc();
 
-  if ($result->num_rows < 1) {
-    echo "<script>alert('Wrong username or password!');</script>";
-  } else {
-    $_SESSION["user"] = $hasil['name'];
-    $conn->close();
+  $stmt = $pdo->prepare("SELECT `username` as name FROM `admins` WHERE `username` = ? AND `password` = ?");
+  $stmt->execute([$user, $passmd5]);
+  $n=0;
+  foreach ($stmt as $row) {
+    $_SESSION["user"] = $row['name'];
     echo "<script>window.location.href='main2.php';</script>";
+    $n++;
+  }
+  if($n<=0){
+    echo "<script>alert('Wrong username or password!');</script>";
   }
 }
 ?>
