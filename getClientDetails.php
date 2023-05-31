@@ -48,9 +48,9 @@ if (!isset($_SESSION["user"])) {
         //Get last Status
         $stmt2 = $pdo->prepare("SELECT `client_status`.`status` AS 'status',
         `client_status`.`date_time` AS `dt`
-        FROM `client_status` WHERE `client_status`.`id` = ? 
+        FROM `client_status` WHERE `client_status`.`id` = ? AND  `client_status`.`status` = ? OR `client_status`.`status` = ?
         ORDER BY `date_time` DESC LIMIT 1");
-        $stmt2->execute([$row["id"]]);
+        $stmt2->execute([$row["id"],"ON","OFF"]);
         foreach ($stmt2 as $row2) {
             if ($row2["status"] == "ON") {
                 //Get last on
